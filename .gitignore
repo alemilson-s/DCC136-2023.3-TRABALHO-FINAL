@@ -1,0 +1,8 @@
+.idea/
+CMakeLists.txt
+cmake-build-debug/
+output_files/
+input/
+exec
+CMakeLists.txt
+src/exec
