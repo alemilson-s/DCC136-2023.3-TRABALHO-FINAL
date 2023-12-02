@@ -18,7 +18,6 @@ private:
     Node *next_node;
     double x;
     double y;
-    int demand;
     bool is_station;
 
 public:
@@ -84,10 +83,6 @@ public:
     bool containsEdge(int edge_id);
 
     void auxRemoveEdge(Node *node, int id_edge);
-
-    int getDemand() const;
-
-    void setDemand(int demand);
 
     bool isStation() const;
 

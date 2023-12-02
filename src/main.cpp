@@ -66,13 +66,13 @@ Graph *leitura(ifstream &input_file) {
         getline(input_file, line);
     }
     getline(input_file, line);
-    int demand;
+    float demand;
     while (line != "STATIONS_COORD_SECTION ") {
         istringstream iss(line);
         iss >> id;
         iss >> demand;
         Node *node = g->getNode(id);
-        node->setDemand(demand);
+        node->setWeight(demand);
         getline(input_file, line);
     }
     getline(input_file, line);
@@ -81,20 +81,11 @@ Graph *leitura(ifstream &input_file) {
         iss >> id;
         Node *node = g->getNode(id);
         node->setIsStation(true);
-        node->setDemand(0);
+        node->setWeight(0);
         getline(input_file, line);
     }
-    getline(input_file, line);
-    Node *node = g->allocateNode(-1);
-    istringstream iss_x(line);
-    getline(input_file, line);
-    istringstream iss_y(line);
-    iss_x >> x;
-    iss_y >> y;
-    node->setX(x);
-    node->setY(y);
+    Node *node = g->getNodeObjectId(0);
     node->setIsStation(true);
-    node->setDemand(0);
     node = g->getFirstNode();
     while (node != nullptr) {
         Node *prox = node->getNextNode();
