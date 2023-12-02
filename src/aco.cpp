@@ -158,7 +158,7 @@ Edge *selectNextClient(Ant &ant, Vehicle &vehicle, Graph &g, float alpha, float 
             return edges[i];
         }
     }
-    return nullptr;
+    return g.getNode(current_client)->getEdge(1);
 }
 
 bool canVisit(Node *node, Vehicle &vehicle, Graph &g, int current_node) {
