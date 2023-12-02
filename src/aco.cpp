@@ -24,7 +24,7 @@ void aco(Graph &g, int cycles, float evaporation, float alpha, float beta) {
         while (j < n_ants) {
             for (int l = 0; l < g.getVehicles(); l++) {
                 Edge *next_client;
-                while (ants[j].vehicles[g.getVehicles() - 1].path.back() != ants[j].vehicles[g.getVehicles() - 1].path[0]) {
+                while (ants[j].vehicles[l].path.back() != ants[j].vehicles[l].path[0]) {
                     next_client = selectNextClient(ants[j], ants[j].vehicles[l], g, alpha, beta, 0.9);
                     Node *node = g.getNode(next_client->getTargetId());
                     ants[j].vehicles[l].path.push_back(next_client->getTargetId());
