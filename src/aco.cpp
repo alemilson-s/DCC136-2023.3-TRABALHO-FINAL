@@ -110,7 +110,7 @@ void initializeParameters(vector<Ant> &ants, Graph &g, float pheromone) {
     initializeAnts(g, ants, g.getOrder());
 }
 
-Edge *selectNextCity(Ant &ant, Vehicle &vehicle, Graph &g, float alpha, float beta) {
+Edge *selectNextClient(Ant &ant, Vehicle &vehicle, Graph &g, float alpha, float beta) {
     Edge *edges[g.getOrder()];
     int n_edges = 0;
     int current_city = vehicle.path.back();
@@ -147,5 +147,95 @@ Edge *selectNextCity(Ant &ant, Vehicle &vehicle, Graph &g, float alpha, float be
         }
     }
     return nullptr;
+}
+
+bool canVisit(Node *node, Vehicle vehicle, Graph &g, int current_node){
+    int current_battery = vehicle.battery;
+    int battery_cost = g.getEnergyConsumption() * node->getEdge(current_node)->getWeight();
+    if(battery_cost > current_battery)
+        return false;
+
+    int current_charge = vehicle.charge;
+    int charge_cost = node->getDemand();
+    if(charge_cost > current_charge)
+        return false;
+
+    Edge *closestStation = closestStop(g, node);
+    battery_cost += g.getEnergyConsumption() * node->getEdge(closestStation->getTargetId())->getWeight();
+    if(battery_cost > current_battery)
+        return false;
+    
+    return true;
+}
+
+Edge * selectNextNode(Ant &ant, Graph &g, float alpha, float beta, int vehicle, double maxTripTime, double tripTime, bool h1) {
+    Edge *edges[g.getOrder()];
+    int n_edges = 0, current_node;
+    current_node = ant.vehicles[vehicle].path.back();
+
+    Edge *edge = g.getNode(current_node)->getFirstEdge();
+    double q = 0;
+    vector<float> qualities;
+    float quality; 
+    Edge *hotelEdge;
+    // analisa todas das arestas do no atual
+    while (edge != nullptr) {
+        Node *node = g.getNode(edge->getTargetId());
+        // se o nó destino da aresta não foi visitado, calculo a "qualidade" do mesmo e coloca no vector de qualidades
+        if (!ant.visited[node->getObjectId()] && canVisit(node, ant.vehicles[vehicle], g, current_node)) {
+            quality = node->getWeight() / (edge->getWeight() + 1); // privilegiando quem tem uma maior demanda e menor distância
+            qualities.push_back(quality);
+            q += pow(edge->getPheromone(), alpha) *
+                 pow(quality, beta); // o q será usado para o calculo de prbabilidades de cada nó q possa ser escolhido
+            edges[n_edges] = edge;
+            n_edges++;
+        }
+        edge = edge->getNextEdge();
+    }
+
+    vector<double> probabilities(n_edges, 0.0); // vector para armazenar as probabilidades
+
+    for (int k = 0; k < n_edges; k++) {
+        probabilities[k] = (pow(edges[k]->getPheromone(), alpha) * pow(qualities[k], beta)) /
+                           q; // caclula as probabilidades baseado na qualidade
+    }
+    // p será utilizado como margem para selecionar o nó conforme a probabilidade
+    double p[probabilities.size()];
+    for (int i = 0; i < probabilities.size(); i++)
+        p[i] = probabilities[i] * 10000;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<double> distribution(0.0, 10000.0);
+    double r = distribution(gen);
+    double t = 0;
+    float distance;
+    for (int i = 0; i < probabilities.size(); i++) {
+        t += p[i];
+        // soma t até chegar no valor aleatório sorteado
+        if (t >= r) {
+            return edges[i];
+        }
+    }
+    return g.getNodeObjectId(current_node)->getEdge(0);
+}
+
+Edge *closestStop(Graph &g, Node *current_node) {
+    Edge *edge = current_node->getFirstEdge();
+    float closest = numeric_limits<float>::max();
+    Edge *closestStop = nullptr;
+    float distance;
+    // analisa todas as arestas do no que possivelmente será escolhido
+    // retorna o hotel mais próximo a esse nó
+    while (edge != nullptr) {
+        Node *node = g.getNode(edge->getTargetId());
+        // cálculo da distância
+        distance = edge->getWeight();
+        if (node->isStation() && distance < closest) {
+            closest = distance;
+            closestStop = edge;
+        }
+        edge = edge->getNextEdge();
+    }
+    return closestStop;
 }
 
