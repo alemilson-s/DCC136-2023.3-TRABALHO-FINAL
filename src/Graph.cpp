@@ -361,19 +361,19 @@ void Graph::setStations(int stations) {
     Graph::stations = stations;
 }
 
-int Graph::getCapacity() const {
+float Graph::getCapacity() const {
     return capacity;
 }
 
-void Graph::setCapacity(int capacity) {
+void Graph::setCapacity(float capacity) {
     Graph::capacity = capacity;
 }
 
-int Graph::getEnergyCapacity() const {
+float Graph::getEnergyCapacity() const {
     return energy_capacity;
 }
 
-void Graph::setEnergyCapacity(int energyCapacity) {
+void Graph::setEnergyCapacity(float energyCapacity) {
     energy_capacity = energyCapacity;
 }
 

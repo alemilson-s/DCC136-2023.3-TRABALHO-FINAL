@@ -32,6 +32,7 @@ Node::Node(int id, double xl, double yl) {
     this->next_node = nullptr;
     this->x = xl;
     this->y = yl;
+    this->is_station = false;
 }
 
 Node::~Node() {
@@ -295,14 +296,6 @@ bool Node::containsEdge(int edge_id) {
         edge = edge->getNextEdge();
     }
     return false;
-}
-
-int Node::getDemand() const {
-    return demand;
-}
-
-void Node::setDemand(int demand) {
-    Node::demand = demand;
 }
 
 bool Node::isStation() const {

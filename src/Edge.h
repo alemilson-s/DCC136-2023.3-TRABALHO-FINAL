@@ -14,11 +14,11 @@ public:
 
     ~Edge();
 
-    int getTargetId();
+    int getTargetId() const;
 
     Edge *getNextEdge();
 
-    double getWeight();
+    double getWeight() const;
 
     double getPheromone() const;
 

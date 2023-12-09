@@ -9,8 +9,8 @@
 
 typedef struct {
     vector<int> path;
-    int charge;
-    int battery;
+    float charge;
+    float battery;
 } Vehicle;
 
 typedef struct {
@@ -31,8 +31,20 @@ void aco(Graph &g, int cycles, float evaporation, float alpha, float beta);
 
 bool isContainedListCandidates(Vehicle &vehicle, int id_node);
 
-bool canVisit(Node *node, Vehicle &vehicle, Graph &g, int current_node);
+bool canVisitClient(Node *node, Vehicle &vehicle, Graph &g, int current_node);
 
 Edge *closestStop(Graph &g, Node *current_node);
+
+bool meetsDemand(Vehicle &vehicle, Graph &g,Ant &ant);
+
+bool canVisitStation(Node *node, Vehicle &vehicle, Graph &g, int current_node);
+
+bool canVisitClientDemand(Node *node, Vehicle &vehicle, Graph &g, int current_node);
+
+bool canVisitClientBattery(Node *node, Vehicle &vehicle, Graph &g, int current_node);
+
+bool solutionValid(Ant &ant, Graph &g);
+
+Edge *closestClient(Graph &g, Node *current_node, Ant &ant);
 
 #endif //DCC067_ACO_ACO_H

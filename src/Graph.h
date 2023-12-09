@@ -20,8 +20,8 @@ private:
     int id_s;
     int vehicles;
     int stations;
-    int capacity;
-    int energy_capacity;
+    float capacity;
+    float energy_capacity;
     float energy_consumption;
 
 public:
@@ -33,13 +33,13 @@ public:
 
     void setStations(int stations);
 
-    int getCapacity() const;
+    float getCapacity() const;
 
-    void setCapacity(int capacity);
+    void setCapacity(float capacity);
 
-    int getEnergyCapacity() const;
+    float getEnergyCapacity() const;
 
-    void setEnergyCapacity(int energyCapacity);
+    void setEnergyCapacity(float energyCapacity);
 
     float getEnergyConsumption() const;
 

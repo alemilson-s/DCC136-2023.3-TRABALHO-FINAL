@@ -45,7 +45,7 @@ Graph *leitura(ifstream &input_file) {
     int capacity = extractNumber(line);
     g->setCapacity(capacity);
     getline(input_file, line);
-    int energy_capacity = extractNumber(line);
+    float energy_capacity = extractNumber(line);
     g->setEnergyCapacity(energy_capacity);
     getline(input_file, line);
     float energy_consumption = extractNumber(line);
@@ -60,9 +60,10 @@ Graph *leitura(ifstream &input_file) {
         iss >> id;
         iss >> x;
         iss >> y;
-        Node *node = g->allocateNode(id);
+        Node *node = g->allocateNode(id - 1);
         node->setX(x);
         node->setY(y);
+        node->setIsStation(false);
         getline(input_file, line);
     }
     getline(input_file, line);
@@ -71,7 +72,7 @@ Graph *leitura(ifstream &input_file) {
         istringstream iss(line);
         iss >> id;
         iss >> demand;
-        Node *node = g->getNode(id);
+        Node *node = g->getNode(id - 1);
         node->setWeight(demand);
         getline(input_file, line);
     }
@@ -79,14 +80,13 @@ Graph *leitura(ifstream &input_file) {
     while (line != "DEPOT_SECTION") {
         istringstream iss(line);
         iss >> id;
-        Node *node = g->getNode(id);
+        Node *node = g->getNode(id -1);
         node->setIsStation(true);
         node->setWeight(0);
         getline(input_file, line);
     }
-    Node *node = g->getNodeObjectId(0);
+    Node *node = g->getNode(0);
     node->setIsStation(true);
-    node = g->getFirstNode();
     while (node != nullptr) {
         Node *prox = node->getNextNode();
         while (prox != nullptr) {
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
     if (g->getOrder() >= 50)
         cycles = 70000;
 
-    aco(*g, cycles, 0.7, 1, 9);
+    aco(*g, cycles, 0.1, 1, 2);
     delete g;
     return 0;
 

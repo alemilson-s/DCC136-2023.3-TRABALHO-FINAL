@@ -20,7 +20,7 @@ Edge::~Edge() {
 
 }
 
-int Edge::getTargetId() {
+int Edge::getTargetId() const {
 
     return this->target_id;
 
@@ -32,7 +32,7 @@ Edge *Edge::getNextEdge() {
 
 }
 
-double Edge::getWeight() {
+double Edge::getWeight() const {
 
     return this->weight;
 
